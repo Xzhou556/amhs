@@ -9,6 +9,7 @@ import amhs.amhs.service.FactoryService;
 import amhs.amhs.service.TransducerService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
@@ -24,6 +25,7 @@ import java.util.Map;
 @RestController
 @Api(value = "传感器api", tags = "传感器api")
 public class TransducerController {
+    private static final Logger LOG = Logger.getLogger(TransducerController.class);
     @Autowired
     FactoryService factoryService;
 
@@ -47,13 +49,19 @@ public class TransducerController {
         long total = transducerDao.count();
         map.put("content", content);
         map.put("total", total);
+        if (map == null) {
+            LOG.error("数据为空！！！");
+        }
         return new ResultGenerator().getSuccessResult(map);
 
     }
 
     @GetMapping("/transducerDetail")
     @ApiOperation(value = "查询单个传感器", notes = "查询单个传感器")
-    public RestResult transducerDetail(Integer id) {
+    public RestResult transducerDetail(@RequestParam(value = "id", required = false) Integer id) {
+        if (id == null) {
+            LOG.error("数据为空！！！");
+        }
         Transducer transducer = transducerDao.findId(id);
         return new ResultGenerator().getSuccessResult(transducer);
     }
@@ -72,25 +80,23 @@ public class TransducerController {
     @ApiOperation(value = "修改传感器", notes = "修改传感器")
     public RestResult updateFactory(@RequestBody Transducer transducer) {
         if (transducer == null) {
-            return new ResultGenerator().getFailResult("数据不能为空");
+            LOG.error("数据不能为空");
         } else {
-
             transducerService.update(transducer);
-            return new ResultGenerator().getSuccessResult();
         }
+        return new ResultGenerator().getSuccessResult();
     }
 
     @PostMapping("/addTransducer")
     @ApiOperation(value = "保存传感器", notes = "保存传感器")
     public RestResult addTransducer(@RequestBody Transducer transducer) {
         if (transducer == null) {
-            return new ResultGenerator().getFailResult("数据不能为空");
+            LOG.error("数据不能为空");
         } else {
-
             transducer.setCreateDateTime(new Date());
-
-            return new ResultGenerator().getSuccessResult();
+            transducerDao.save(transducer);
         }
+        return new ResultGenerator().getSuccessResult();
     }
 
 }

@@ -28,6 +28,7 @@ public class ShiroConfig {
         filterChainDefinitionMap.put("/login/**", "anon");
         filterChainDefinitionMap.put("/swagger**/**", "anon");
         filterChainDefinitionMap.put("/**/swagger**/**", "anon");
+        filterChainDefinitionMap.put("/images/**", "anon");
         filterChainDefinitionMap.put("/logout", "logout");
         filterChainDefinitionMap.put("/**","jwt");
         shiroFilterFactoryBean.setUnauthorizedUrl("/401");

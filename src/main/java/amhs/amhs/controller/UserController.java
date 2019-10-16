@@ -8,9 +8,16 @@ import amhs.amhs.entity.vo.ResultGenerator;
 import amhs.amhs.service.UserInfoService;
 import amhs.amhs.utils.*;
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.log4j.Logger;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.usermodel.*;
 import org.apache.shiro.SecurityUtils;
@@ -36,7 +43,7 @@ import java.util.*;
 @RequestMapping("/user")
 @Api(value = "用户api",tags = "用户api")
 public class UserController {
-
+    private static final Logger LOG = Logger.getLogger(UserController.class);
     @Autowired
     UserInfoService userInfoService;
     @Autowired
@@ -46,7 +53,7 @@ public class UserController {
     @ApiOperation(value = "添加用户",notes = "添加用户")
     public RestResult addUser(@RequestBody UserInfo userInfo, HttpServletRequest request , HttpServletResponse response) {
         if (userInfo == null) {
-            return new ResultGenerator().getFailResult("数据不能为空");
+            LOG.error("数据不能为空");
         } else {
             userInfo.setCreateDateTime(new Date());
             //CommonUtil随机获取五位salt
@@ -56,8 +63,8 @@ public class UserController {
             userInfo.setSalt(salt);
       //      System.out.println(userInfo.getRole().getRoleId());
             userInfoDao.save(userInfo);
-            return new ResultGenerator().getSuccessResult();
         }
+        return new ResultGenerator().getSuccessResult();
     }
 
     @GetMapping("/userDetail")
@@ -71,12 +78,12 @@ public class UserController {
     @ApiOperation(value = "修改用户",notes = "修改用户")
     public RestResult updateUser(@RequestBody UserInfo userInfo) {
         if (userInfo == null) {
-            return new ResultGenerator().getFailResult("数据不能为空");
+            LOG.error("数据不能为空");
         } else {
             userInfo.setUpdateDateTime(new Date());
             userInfoService.upDate(userInfo);
-            return new ResultGenerator().getSuccessResult();
         }
+        return new ResultGenerator().getSuccessResult();
     }
     @DeleteMapping("/deleteUser")
     @ApiOperation(value = "删除用户",notes = "删除用户")
@@ -108,6 +115,9 @@ public class UserController {
         List<UserInfo> content = all.getContent();
         map.put("total",total);
         map.put("content",content);
+        if (map == null) {
+            LOG.error("数据为空！！！");
+        }
         return new ResultGenerator().getSuccessResult(map);
     }
 
@@ -115,9 +125,8 @@ public class UserController {
     @ApiOperation(value = "修改密码",notes = "修改密码")
     public RestResult setPwd(@RequestBody UserInfo userInfo){
         if (userInfo == null ) {
-            return new ResultGenerator().getFailResult("数据不能为空");
+            LOG.error("数据不能为空");
         }
-
         userInfo.setUpdateDateTime(new Date());
         if (StringUtil.isNotEmpty(userInfo.getPassword())){
             String salt = CommonUtil.getRandomString(5);
@@ -148,7 +157,42 @@ public class UserController {
     @GetMapping("/exportFile")
     public RestResult exportFile(HttpServletResponse response) throws IOException {
         List<UserInfo> userInfos = userInfoDao.findAll();
-      //  WriteExcelUtil.exportExcel(userInfos,response.getOutputStream());
+        String s = JSONArray.toJSONString(userInfos);
+        String[] arr = new String[s.length()];
+        System.out.println(arr);
+        // WriteExcelUtil.exportExcel(s,response.getOutputStream());
         return null;
     }
+    @ApiOperation(value = "导出111")
+    @GetMapping(value = "/findall")
+    public RestResult findAllStudent(HttpServletResponse response) throws IOException {
+        Workbook wb = new HSSFWorkbook();
+        String headers[] = { "id", "major", "t_name" };
+        int rowIndex = 0;
+        Sheet sheet = wb.createSheet();
+        Row row = sheet.createRow(rowIndex++);
+        for (int i = 0; i < headers.length; i++) { // 先写表头
+            row.createCell(i).setCellValue(headers[i]);
+
+        }
+        List<UserInfo> userInfos = userInfoDao.findAll();
+        for (int i = 0; i < userInfos.size(); i++) {
+            row = sheet.createRow(rowIndex++);
+            if (row == null){
+                continue;
+            }
+            row.createCell(0).setCellValue(userInfos.get(i).getAccount());
+            row.createCell(1).setCellValue(userInfos.get(i).getUserId());
+            row.createCell(2).setCellValue(userInfos.get(i).getPassword());
+        }
+        response.setHeader("Content-Disposition",
+                "attachment;filename=" + new String("excel.xls".getBytes("utf-8"), "iso8859-1"));
+        response.setContentType("application/ynd.ms-excel;charset=UTF-8");
+        OutputStream out = response.getOutputStream();
+        wb.write(out);
+        out.flush();
+        out.close();
+        return new ResultGenerator().getSuccessResult();
+    }
+
 }

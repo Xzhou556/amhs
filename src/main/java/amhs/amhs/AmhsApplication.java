@@ -22,14 +22,6 @@ public class AmhsApplication {
     public static void main(String[] args) {
         SpringApplication.run(AmhsApplication.class, args);
     }
-    @Value("${file.uploadFolder}")
-    private String uploadFolder;
-    @Bean
-    MultipartConfigElement multipartConfigElement() {
-        MultipartConfigFactory factory = new MultipartConfigFactory();
-        factory.setLocation(uploadFolder);
-        return factory.createMultipartConfig();
-    }
 
 
 }

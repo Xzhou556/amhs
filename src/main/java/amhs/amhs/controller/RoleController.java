@@ -15,6 +15,7 @@ import com.alibaba.fastjson.JSONObject;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 
@@ -27,6 +28,7 @@ import java.util.*;
 @RequestMapping("/role")
 @Api(value = "角色api", tags = "角色api")
 public class RoleController {
+    private static final Logger LOG = Logger.getLogger(RoleController.class);
     @Autowired
     RoleMenuDao roleMenuDao;
     @Autowired
@@ -42,12 +44,12 @@ public class RoleController {
     @ApiOperation(value = "添加角色", notes = "添加角色")
     public RestResult addRole(@RequestBody Role role) {
         if (role.getName() == null || "".equals(role.getName())) {
-            return new ResultGenerator().getFailResult("角色名称不能为空");
+           LOG.error("角色名称不能为空");
         } else {
             role.setCreateDateTime(new Date());
             roleDao.save(role);
-            return new ResultGenerator().getSuccessResult();
         }
+        return new ResultGenerator().getSuccessResult();
     }
 
     @PutMapping("/updateRole")

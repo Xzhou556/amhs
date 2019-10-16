@@ -8,6 +8,7 @@ import amhs.amhs.utils.FileUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.ObjectUtils;
+import org.apache.log4j.Logger;
 import org.apache.shiro.web.servlet.ShiroHttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -34,7 +35,7 @@ import java.util.UUID;
 @RestController
 @Api(value = "初始化界面api",tags = "初始化界面api")
 public class IndexController {
-
+    private static final Logger LOG = Logger.getLogger(IndexController.class);
     @Value("${smas.captrue.image.path}")
     private String captureImagePath;
 
@@ -61,38 +62,13 @@ public class IndexController {
         map.put("factoryTotal",total);
         map.put("inLine",total1);
         map.put("offLine",total2);
+        if (map == null){
+            LOG.error("数据为空！！！");
+        }
         return new ResultGenerator().getSuccessResult(map);
     }
 
 
-    //处理文件上传
-    @ApiOperation(value = "单个文件上传" ,notes = "单个文件上传")
-    @PostMapping(value = "/upload")
-    public RestResult upload(@RequestParam(value = "file",required = false) MultipartFile file,
-                            HttpServletRequest request) {
-        if (file.isEmpty()) {
-            return new ResultGenerator().getFailResult("文件不能为空");
-        }
-        // String contentType = file.getContentType();
-        String fileName = file.getOriginalFilename();  //获取上传文件原名
-        String suffixName = fileName.substring(fileName.lastIndexOf("."));
-        String filePath = "E://txt//";
-        fileName = UUID.randomUUID() + suffixName;
-        File dest = new File(filePath + fileName);
-        if (!dest.getParentFile().exists()) {
-            dest.getParentFile().mkdirs();
-
-            try {
-                file.transferTo(dest);
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            //返回json
-
-        }
-        return new ResultGenerator().getSuccessResult();
-    }
 
 
 

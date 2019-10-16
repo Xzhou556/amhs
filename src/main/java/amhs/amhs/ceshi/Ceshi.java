@@ -7,6 +7,7 @@ import amhs.amhs.entity.UserInfo;
 import amhs.amhs.service.FactoryService;
 import amhs.amhs.service.UserInfoService;
 import amhs.amhs.utils.MD5Util;
+import org.apache.log4j.Logger;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +23,7 @@ import java.util.List;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class Ceshi {
-
+private static final Logger LOG =Logger.getLogger(Ceshi.class);
     @Autowired
     UserInfoService userInfoService;
     @Autowired
@@ -53,7 +54,8 @@ UserInfoDao userInfoDao;
 
     @Test
     public  void t5(){
-        int i = factoryService.totalFactory();
+        long i =factoryDao.count();
+        LOG.info("+++++++++"+i);
         System.out.println(i);
     }
 

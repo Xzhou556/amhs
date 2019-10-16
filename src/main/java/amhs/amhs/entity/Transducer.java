@@ -20,7 +20,7 @@ public class Transducer implements Serializable {
 
     private Integer deviceId;//设备类型
 
-    private Integer deviceNumber;//设备编号
+    private String deviceNumber;//设备编号
     @Column(precision = 10, scale = 2)
     private BigDecimal threshold;//报警水位阈值
     @Column(precision = 10, scale = 2)
@@ -81,11 +81,11 @@ public class Transducer implements Serializable {
         this.deviceId = deviceId;
     }
 
-    public Integer getDeviceNumber() {
+    public String getDeviceNumber() {
         return deviceNumber;
     }
 
-    public void setDeviceNumber(Integer deviceNumber) {
+    public void setDeviceNumber(String deviceNumber) {
         this.deviceNumber = deviceNumber;
     }
 
