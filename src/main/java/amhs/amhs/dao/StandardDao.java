@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
 import javax.transaction.Transactional;
+import java.util.List;
 
 public interface StandardDao  extends JpaRepository<Standard,Integer> {
 
@@ -17,4 +18,9 @@ public interface StandardDao  extends JpaRepository<Standard,Integer> {
     @Modifying
     @Query(value = "delete from t_standard where standard_id=?1",nativeQuery = true)
     Integer deleteByStandardId(Integer id);
+
+
+    @Query(value = "select * from t_standard where tt_id = ?",nativeQuery = true)
+    List<Standard> findTtId(Integer id);
+
 }

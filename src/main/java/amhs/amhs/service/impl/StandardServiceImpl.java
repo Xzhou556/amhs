@@ -4,6 +4,8 @@ import amhs.amhs.dao.StandardDao;
 import amhs.amhs.entity.Standard;
 import amhs.amhs.service.StandardService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -16,11 +18,8 @@ public class StandardServiceImpl implements StandardService {
     StandardDao standardDao;
 
     public Standard replace(Standard curr,Standard origin){
-        if (curr.getStandardId() == null){
-            curr.setStandardId(origin.getStandardId());
-        }
         if (curr.getName() == null){
-            origin.setName(curr.getName());
+            curr.setName(origin.getName());
         }
         if (curr.getUpperLimit() == null){
             curr.setUpperLimit(origin.getUpperLimit());
@@ -40,7 +39,21 @@ public class StandardServiceImpl implements StandardService {
     public Integer update(Standard standard) {
      Standard origin =    standardDao.findId(standard.getStandardId());
      standard = replace(standard,origin);
+    // standardDao.deleteByStandardId(standard.getStandardId());
      standardDao.save(standard);
         return 1;
+    }
+
+    @Override
+    public Page<Standard> findAll(Integer pageNum, Integer pageSize) {
+        if (pageNum==null||pageNum==0){
+            pageNum=1;
+        }
+        if (pageSize==null||pageSize==0){
+            pageSize=15;
+        }
+        PageRequest of = PageRequest.of(pageNum - 1, pageSize);
+        Page<Standard> all = standardDao.findAll(of);
+        return all;
     }
 }

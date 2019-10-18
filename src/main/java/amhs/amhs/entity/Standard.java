@@ -12,9 +12,9 @@ public class Standard {
     private Integer standardId;
 
     private String name;
-    @Column(precision = 4, scale = 2)
+    @Column(precision = 6, scale = 2)
     private BigDecimal upperLimit;
-    @Column(precision = 4, scale = 2)
+    @Column(precision = 6, scale = 2)
     private BigDecimal lowerLimit;
     private String unit;
 
