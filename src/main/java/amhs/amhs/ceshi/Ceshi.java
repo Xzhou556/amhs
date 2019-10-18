@@ -1,6 +1,8 @@
 package amhs.amhs.ceshi;
 
 import amhs.amhs.dao.FactoryDao;
+import amhs.amhs.dao.RoleDao;
+import amhs.amhs.dao.RoleMenuDao;
 import amhs.amhs.dao.UserInfoDao;
 import amhs.amhs.entity.Factory;
 import amhs.amhs.entity.UserInfo;
@@ -18,6 +20,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 @RunWith(SpringRunner.class)
@@ -31,6 +34,10 @@ private static final Logger LOG =Logger.getLogger(Ceshi.class);
 
     @Autowired
     FactoryDao factoryDao;
+    @Autowired
+    RoleMenuDao roleMenuDao;
+    @Autowired
+    RoleDao roleDao;
 @Autowired
 UserInfoDao userInfoDao;
 
@@ -67,6 +74,12 @@ UserInfoDao userInfoDao;
        }else {
            System.out.println("dsddsdsd");
        }
+
+    }
+    @Test
+
+    public  void t7(){
+        roleMenuDao.deleteByRoleId(1);
 
     }
 

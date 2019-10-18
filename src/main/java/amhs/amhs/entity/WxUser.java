@@ -47,27 +47,8 @@ public class WxUser implements Serializable {
         this.updateDateTime = updateDateTime;
     }
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "wxUser_factory",
-            joinColumns = {@JoinColumn(name = "wxId")},
-            inverseJoinColumns = {@JoinColumn(name = "factoryId")})
-    private List<Factory> factories;
 
-    @Override
-    public String toString() {
-        return "WxUser{" +
-                "wxId=" + wxId +
-                ", openId='" + openId + '\'' +
-                ", nickname='" + nickname + '\'' +
-                ", Avatar='" + Avatar + '\'' +
-                ", sex='" + sex + '\'' +
-                ", unionid='" + unionid + '\'' +
-                ", city='" + city + '\'' +
-                ", province='" + province + '\'' +
-                ", country='" + country + '\'' +
-                ", factories=" + factories +
-                '}';
-    }
+
 
     public Integer getWxId() {
         return wxId;
@@ -141,11 +122,5 @@ public class WxUser implements Serializable {
         this.country = country;
     }
 
-    public List<Factory> getFactories() {
-        return factories;
-    }
 
-    public void setFactories(List<Factory> factories) {
-        this.factories = factories;
-    }
 }

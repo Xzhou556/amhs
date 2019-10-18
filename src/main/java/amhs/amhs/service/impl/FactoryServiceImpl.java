@@ -67,8 +67,8 @@ public class FactoryServiceImpl implements FactoryService {
         if(curr.getPhone()==null){
             curr.setPhone(origin.getPhone());
         }
-        if(curr.getIntroduction()==null){
-            curr.setIntroduction(origin.getIntroduction());
+        if(curr.getDescription()==null){
+            curr.setDescription(origin.getDescription());
         }
         if(curr.getLatitude()==null){
             curr.setLatitude(origin.getLatitude());
@@ -82,17 +82,20 @@ public class FactoryServiceImpl implements FactoryService {
         if(curr.getTransducers()==null){
             curr.setTransducers(origin.getTransducers());
         }
-        if(curr.getUserInfos()==null){
-            curr.setUserInfos(origin.getUserInfos());
-        }
-        if(curr.getWxUsers()==null){
-            curr.setWxUsers(origin.getWxUsers());
-        }
         if(curr.getCreateDateTime()==null){
             curr.setCreateDateTime(origin.getCreateDateTime());
         }
         if(curr.getUpdateDateTime()==null){
             curr.setUpdateDateTime(origin.getUpdateDateTime());
+        }
+        if(curr.getLeader()==null){
+            curr.setLeader(origin.getLeader());
+        }
+        if(curr.getTel()==null){
+            curr.setTel(origin.getTel());
+        }
+        if(curr.getProvince()==null){
+            curr.setProvince(origin.getProvince());
         }
 
         return curr;

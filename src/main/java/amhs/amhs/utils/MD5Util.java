@@ -1,16 +1,23 @@
 package amhs.amhs.utils;
 
+import amhs.amhs.dao.UserInfoDao;
+import amhs.amhs.entity.UserInfo;
+import org.springframework.beans.factory.annotation.Autowired;
+
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 
 public class MD5Util {
+
     /**
      * 通过盐值对字符串进行MD5加密
      *
-     * @param param 需要加密的字符串
-     * @param salt  盐值
+     * @param
+     * @param
      * @return
      */
+
+
     public static String md5(String content) {
         // 用于加密的字符
         char[] md5String = {'0','1','2','3','4','5','6','7','8','9','A','B','C','D','E','F'};
@@ -47,6 +54,6 @@ public class MD5Util {
     }
 
     public static void main(String[] args) {
-        System.out.println(md5("123456"));
+        System.out.println(md5("cc"+"ebzmt"));
     }
 }

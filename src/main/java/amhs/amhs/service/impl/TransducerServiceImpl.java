@@ -115,13 +115,15 @@ public class TransducerServiceImpl implements TransducerService {
         if (curr.getFactory() == null) {
             curr.setFactory(origin.getFactory());
         }
-
+        if (curr.getTransducerType() == null) {
+            curr.setTransducerType(origin.getTransducerType());
+        }
         return curr;
     }
 
     @Override
     public Integer update(Transducer transducer) {
-        Transducer origin = transducerDao.findId(transducer.getDeviceId());
+        Transducer origin = transducerDao.findId(transducer.getTransducerId());
         transducer=  replace(transducer,origin);
         transducerDao.save(transducer);
         return 1;

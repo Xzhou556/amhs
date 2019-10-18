@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 public interface MenuDao extends JpaRepository<Menu,Integer>, JpaSpecificationExecutor<Menu> {
@@ -23,4 +24,7 @@ public interface MenuDao extends JpaRepository<Menu,Integer>, JpaSpecificationEx
 
     @Query(value = "SELECT * FROM t_menu WHERE p_id != -1",nativeQuery = true)
     List<Menu> ziCaiDan();
+
+    @Transactional
+    Integer deleteByMenuId(Integer id);
 }

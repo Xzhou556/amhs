@@ -1,8 +1,10 @@
 package amhs.amhs.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import io.swagger.annotations.ApiModel;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -25,8 +27,12 @@ public class UserInfo implements Serializable {
     private String salt; //加盐
     private Integer orderNo;//排序号
     @Temporal(TemporalType.TIMESTAMP)
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createDateTime;//创建时间
     @Temporal(TemporalType.TIMESTAMP)
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date updateDateTime;//修改时间
     private Integer state;
     private String remark;
@@ -37,9 +43,6 @@ public class UserInfo implements Serializable {
     @JoinColumn(name="roleId")
     private Role role; // 角色
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "User_factory",joinColumns = {@JoinColumn(name = "userId")},inverseJoinColumns = {@JoinColumn(name ="factoryId" )})
-    private List<Factory> factories;
 
     public Integer getUserId() {
         return userId;
@@ -97,7 +100,7 @@ public class UserInfo implements Serializable {
         this.orderNo = orderNo;
     }
 
-    @JsonSerialize(using = CustomDateTimeSerializer.class)
+
     public Date getCreateDateTime() {
         return createDateTime;
     }
@@ -105,7 +108,7 @@ public class UserInfo implements Serializable {
     public void setCreateDateTime(Date createDateTime) {
         this.createDateTime = createDateTime;
     }
-    @JsonSerialize(using = CustomDateTimeSerializer.class)
+
     public Date getUpdateDateTime() {
         return updateDateTime;
     }
@@ -122,13 +125,6 @@ public class UserInfo implements Serializable {
         this.role = role;
     }
 
-    public List<Factory> getFactories() {
-        return factories;
-    }
-
-    public void setFactories(List<Factory> factories) {
-        this.factories = factories;
-    }
     public Integer getState() {
         return state;
     }

@@ -27,6 +27,6 @@ public interface TransducerDao extends JpaRepository<Transducer,Integer> {
     Page<Transducer> findLikeNameByPage(String account , Pageable pageable);
 
 
-    @Query(value = "select * from t_transducer where device_id=?",nativeQuery = true)
+    @Query(value = "select * from t_transducer where transducer_id=?",nativeQuery = true)
     Transducer findId(Integer id);
 }

@@ -16,7 +16,7 @@ import java.util.List;
 
 public interface FactoryDao extends JpaRepository<Factory,Integer>, JpaSpecificationExecutor<Factory> {
     //
-    @Query(value="select * from t_factory where id = ?1",nativeQuery = true)
+    @Query(value="select * from t_factory where factory_id = ?1",nativeQuery = true)
     public Factory findId(Integer factoryId);
 
 

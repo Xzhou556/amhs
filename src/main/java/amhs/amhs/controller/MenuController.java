@@ -103,10 +103,10 @@ public class MenuController {
                     //看看下面有没有菜单   一同删除
                     List<Menu> list = menuService.list(map, 0, 100);
                     for (Menu menu : list) {
-                        menuDao.deleteById(menu.getMenuId());
+                        menuDao.deleteByMenuId(menu.getMenuId());
                     }
                     //看看下面有没有菜单   一同删除
-                    menuDao.deleteById(Integer.parseInt(arr[i]));
+                    menuDao.deleteByMenuId(Integer.parseInt(arr[i]));
                 } catch (Exception e) {
                     return new ResultGenerator().getFailResult("有角色正在使用些菜单");
                 }

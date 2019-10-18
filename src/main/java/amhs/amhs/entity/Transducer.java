@@ -28,7 +28,7 @@ public class Transducer implements Serializable {
     /*0：在线  1：离线*/
     private byte deviceStatus;//设备状态
 
-    private  String crc;//crc校验码
+    private String crc;//crc校验码
 
 
     private Date collectTime;//采集时间
@@ -50,6 +50,7 @@ public class Transducer implements Serializable {
     private Integer dataWarm;//数据报警
 
     private Integer dataType;//数据类型
+
     @JsonSerialize(using = CustomDateTimeSerializer.class)
     public Date getCreateDateTime() {
         return createDateTime;
@@ -62,8 +63,21 @@ public class Transducer implements Serializable {
     private Date createDateTime;//创建时间
 
     @ManyToOne(targetEntity = Factory.class)
-    @JoinColumn(name = "factory_Id",referencedColumnName = "factoryId")
+    @JoinColumn(name = "factory_Id", referencedColumnName = "factoryId")
     private Factory factory;
+
+    @ManyToOne
+    @JoinColumn(name = "tt_id")
+    private TransducerType transducerType;
+
+
+    public TransducerType getTransducerType() {
+        return transducerType;
+    }
+
+    public void setTransducerType(TransducerType transducerType) {
+        this.transducerType = transducerType;
+    }
 
     public Integer getTransducerId() {
         return TransducerId;
@@ -120,6 +134,7 @@ public class Transducer implements Serializable {
     public void setCrc(String crc) {
         this.crc = crc;
     }
+
     @JsonSerialize(using = CustomDateTimeSerializer.class)
     public Date getCollectTime() {
         return collectTime;
@@ -152,6 +167,7 @@ public class Transducer implements Serializable {
     public void setLatitude(BigDecimal latitude) {
         this.latitude = latitude;
     }
+
     @JsonSerialize(using = CustomDateTimeSerializer.class)
     public Date getExpirationDate() {
         return expirationDate;

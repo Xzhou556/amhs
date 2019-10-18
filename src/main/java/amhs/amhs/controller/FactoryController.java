@@ -89,13 +89,13 @@ public class FactoryController {
         return new ResultGenerator().getSuccessResult();
     }
 
-    @PutMapping("/updateFactory")
+    @PostMapping("/updateFactory")
     @ApiOperation(value = "修改工厂", notes = "修改工厂")
     public RestResult updateFactory(@RequestBody Factory factory) {
         if (factory == null) {
             LOG.error("数据为空");
         } else {
-
+            factory.setUpdateDateTime(new Date());
             factoryService.update(factory);
         }
         return new ResultGenerator().getSuccessResult();
@@ -181,6 +181,6 @@ public class FactoryController {
         } catch (IOException e) {
             LOG.error(e.getMessage(), e.getCause());
         }
-        return new ResultGenerator().getSuccessResult();
+        return new ResultGenerator().getSuccessResult("/images/"+fileName);
     }
 }

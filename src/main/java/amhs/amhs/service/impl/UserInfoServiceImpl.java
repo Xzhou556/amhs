@@ -79,9 +79,6 @@ public class UserInfoServiceImpl implements UserInfoService {
         if (curr.getRole() == null){
             curr.setRole(origin.getRole());
         }
-        if (curr.getFactories() == null){
-            curr.setFactories(origin.getFactories());
-        }
         return curr;
     }
 }

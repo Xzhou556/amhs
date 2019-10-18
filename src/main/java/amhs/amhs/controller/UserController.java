@@ -7,35 +7,24 @@ import amhs.amhs.entity.vo.RestResult;
 import amhs.amhs.entity.vo.ResultGenerator;
 import amhs.amhs.service.UserInfoService;
 import amhs.amhs.utils.*;
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.log4j.Logger;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.ss.util.CellRangeAddress;
-import org.apache.poi.xssf.usermodel.*;
 import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.authz.annotation.RequiresPermissions;
-import org.apache.shiro.authz.annotation.RequiresRoles;
+import org.apache.shiro.authz.UnauthorizedException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.swing.*;
-import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.util.*;
 
 @RestController
@@ -59,12 +48,36 @@ public class UserController {
             //CommonUtil随机获取五位salt
             String salt = CommonUtil.getRandomString(5);
             //给密码加密加盐
-            userInfo.setPassword(MD5Util.md5(userInfo.getAccount()) + salt);
             userInfo.setSalt(salt);
+            //userInfo.setPassword(MD5Util.md5(userInfo.getAccount()) + salt);
+            userInfo.setPassword(ShiroKit.md5(userInfo.getAccount(),userInfo.getPassword()));
+
       //      System.out.println(userInfo.getRole().getRoleId());
             userInfoDao.save(userInfo);
         }
         return new ResultGenerator().getSuccessResult();
+    }
+    @ApiOperation(value = "登录")
+    @PostMapping("/login")
+    public RestResult login(@RequestParam(value = "account" ,required = false)String account,
+                            @RequestParam(value = "password" ,required = false)String password){
+        UserInfo userInfo = userInfoDao.findByAccount(account);
+        // if ()
+
+        String cc = ShiroKit.md5(account, password);
+
+        System.out.println(userInfo.getPassword());
+        if (userInfo.getPassword().equals(cc)){
+            String token = JWTUtil.sign(account, password);
+            return new ResultGenerator().getSuccessResult(token);
+        }else if (!userInfo.getAccount().equals(account)) {
+            return new ResultGenerator().getFailResult("账户密码不对");
+        }else {
+                LOG.error("账号密码错误");
+                throw new UnauthorizedException();
+            }
+
+
     }
 
     @GetMapping("/userDetail")
@@ -194,5 +207,6 @@ public class UserController {
         out.close();
         return new ResultGenerator().getSuccessResult();
     }
+
 
 }

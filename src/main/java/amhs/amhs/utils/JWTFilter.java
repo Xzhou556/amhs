@@ -1,5 +1,7 @@
 package amhs.amhs.utils;
 
+import com.alibaba.fastjson.JSONObject;
+import org.apache.log4j.Logger;
 import org.apache.shiro.authz.AuthorizationException;
 import org.apache.shiro.web.filter.authc.BasicHttpAuthenticationFilter;
 import org.springframework.http.HttpStatus;
@@ -10,8 +12,11 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.text.SimpleDateFormat;
 
 public class JWTFilter extends BasicHttpAuthenticationFilter {
+    private static final Logger LOG = Logger.getLogger(JWTFilter.class);
     // 登录标识
     private static String LOGIN_SIGN = "Authorization";
     /**
@@ -31,11 +36,35 @@ public class JWTFilter extends BasicHttpAuthenticationFilter {
 
     @Override
     protected boolean executeLogin(ServletRequest request, ServletResponse response) throws Exception {
-        HttpServletRequest req= (HttpServletRequest) request;
-        String header = req.getHeader(LOGIN_SIGN);
-        JWTToken token = new JWTToken(header);
-        getSubject(request,response).login(token);
-        return  true;
+        HttpServletResponse httpServletResponse = (HttpServletResponse) response;
+        try {
+            HttpServletRequest req= (HttpServletRequest) request;
+            String header = req.getHeader(LOGIN_SIGN);
+            JWTToken token = new JWTToken(header);
+            getSubject(request,response).login(token);
+            LOG.info("JWT验证用户信息成功");
+            return  true;
+        }catch (Exception e){
+            /**
+             * 原生的shiro验证失败会进入全局异常 但是 和JWT结合以后却不进入了  之前一直想不通
+             *   原因是 JWT直接在过滤器里验证  验证成功与否 都是直接返回到过滤器中 成功在进入controller
+             *    失败直接返回进入springboot自定义异常处理页面
+             */
+            JSONObject json= new JSONObject();
+            json.put("result","401");
+            json.put("resultCode","token无效，请重新获取。");
+            json.put("resultData","null");
+            PrintWriter out = null;
+            httpServletResponse.setCharacterEncoding("UTF-8");
+            httpServletResponse.setContentType("application/json; charset=utf-8");
+            LOG.info("返回是");
+            LOG.info(json.toString());
+            out = httpServletResponse.getWriter();
+            out.append(json.toString());
+
+        }
+        return false;
+
     }
 
     @Override
@@ -44,7 +73,7 @@ public class JWTFilter extends BasicHttpAuthenticationFilter {
             try {
                 executeLogin(request,response);
             }catch (Exception e){
-               throw new AuthorizationException("权限不足",e);
+                LOG.error(e.getMessage(),e.getCause()); //throw new AuthorizationException("权限不足",e);
             }
 
         }

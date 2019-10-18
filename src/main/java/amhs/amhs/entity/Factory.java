@@ -1,7 +1,10 @@
 package amhs.amhs.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import io.swagger.annotations.ApiModel;
+import org.springframework.format.annotation.DateTimeFormat;
+import springfox.documentation.service.ApiListing;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -18,11 +21,11 @@ public class Factory implements Serializable {
 
     private String factoryName;//工厂名称
 
-    private  String address;//工厂地址
+    private String address;//工厂地址
 
-    private  String phone;//工厂电话
+    private String phone;//工厂电话
 
-    private String  Introduction;//公司简介
+    private String description;//公司简介
 
     @Column(precision = 10, scale = 6)
     private BigDecimal longitude;//经度
@@ -33,29 +36,29 @@ public class Factory implements Serializable {
     @Column(columnDefinition = "text")
     private String picture; //图片
 
+    private String province;//省市区
+
+    private String leader;//负责人
+
+    private String tel;//办公室座机电话
 
 
     private String factoryType; //公司的类型 不用枚举了自己填下公司类型
 
     @OneToMany(targetEntity = Transducer.class)
-    @JoinColumn(name = "factory_Id",referencedColumnName = "factoryId")
+    @JoinColumn(name = "factory_Id", referencedColumnName = "factoryId")
     private List<Transducer> transducers;
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "user_factory",joinColumns = {@JoinColumn(name = "factoryId")},inverseJoinColumns = {@JoinColumn(name ="userId" )})
-    private List<UserInfo> userInfos ;
-
-    @ManyToMany
-    @JoinTable(name = "wxUser_factory",
-            joinColumns = {@JoinColumn(name = "factoryId")},
-            inverseJoinColumns = {@JoinColumn(name = "wxId")})
-    private Set<WxUser> wxUsers;
 
     //创建时间
     @Temporal(TemporalType.TIMESTAMP)
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date createDateTime;
     //修改时间
     @Temporal(TemporalType.TIMESTAMP)
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date updateDateTime;
 
     public Integer getFactoryId() {
@@ -90,12 +93,37 @@ public class Factory implements Serializable {
         this.phone = phone;
     }
 
-    public String getIntroduction() {
-        return Introduction;
+    public String getDescription() {
+        return description;
     }
 
-    public void setIntroduction(String introduction) {
-        Introduction = introduction;
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getProvince() {
+        return province;
+    }
+
+    public void setProvince(String province) {
+        this.province = province;
+    }
+
+
+    public String getLeader() {
+        return leader;
+    }
+
+    public void setLeader(String leader) {
+        this.leader = leader;
+    }
+
+    public String getTel() {
+        return tel;
+    }
+
+    public void setTel(String tel) {
+        this.tel = tel;
     }
 
     public BigDecimal getLongitude() {
@@ -138,22 +166,9 @@ public class Factory implements Serializable {
         this.transducers = transducers;
     }
 
-    public List<UserInfo> getUserInfos() {
-        return userInfos;
-    }
 
-    public void setUserInfos(List<UserInfo> userInfos) {
-        this.userInfos = userInfos;
-    }
 
-    public Set<WxUser> getWxUsers() {
-        return wxUsers;
-    }
 
-    public void setWxUsers(Set<WxUser> wxUsers) {
-        this.wxUsers = wxUsers;
-    }
-    @JsonSerialize(using = CustomDateTimeSerializer.class)
     public Date getCreateDateTime() {
         return createDateTime;
     }
@@ -161,7 +176,8 @@ public class Factory implements Serializable {
     public void setCreateDateTime(Date createDateTime) {
         this.createDateTime = createDateTime;
     }
-    @JsonSerialize(using = CustomDateTimeSerializer.class)
+
+
     public Date getUpdateDateTime() {
         return updateDateTime;
     }
@@ -177,14 +193,15 @@ public class Factory implements Serializable {
                 ", factoryName='" + factoryName + '\'' +
                 ", address='" + address + '\'' +
                 ", phone='" + phone + '\'' +
-                ", Introduction='" + Introduction + '\'' +
+                ", description='" + description + '\'' +
                 ", longitude=" + longitude +
                 ", latitude=" + latitude +
                 ", picture='" + picture + '\'' +
+                ", province='" + province + '\'' +
+                ", leader='" + leader + '\'' +
+                ", tel='" + tel + '\'' +
                 ", factoryType='" + factoryType + '\'' +
                 ", transducers=" + transducers +
-                ", userInfos=" + userInfos +
-                ", wxUsers=" + wxUsers +
                 ", createDateTime=" + createDateTime +
                 ", updateDateTime=" + updateDateTime +
                 '}';
