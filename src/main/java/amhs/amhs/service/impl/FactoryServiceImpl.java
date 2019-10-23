@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @Transactional
@@ -38,7 +39,7 @@ public class FactoryServiceImpl implements FactoryService {
             pageSize=15;
         }
         PageRequest of = PageRequest.of(pageNum - 1, pageSize);
-        Page<Factory> likeNameByPage = factoryDao.findLikeNameByPage(factory.getFactoryName() == null ? "" : factory.getFactoryName(), of);
+        Page<Factory> likeNameByPage = factoryDao.findLikeNameByPage(factory.getFactoryName() == ""|| factory.getFactoryName() == null ? "" : factory.getFactoryName(), of);
         return likeNameByPage;
     }
 

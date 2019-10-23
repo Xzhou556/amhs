@@ -1,5 +1,6 @@
 package amhs.amhs.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import io.swagger.annotations.ApiModel;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -38,7 +39,9 @@ public class Transducer implements Serializable {
     private BigDecimal longitude;//经度
     @Column(precision = 10, scale = 6)
     private BigDecimal latitude;//纬度
-
+    @Temporal(TemporalType.TIMESTAMP)
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date expirationDate;//到期时间
 
     private Integer batteryPercentage;//电池电量百分比

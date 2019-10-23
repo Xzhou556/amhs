@@ -37,26 +37,55 @@ public class FactoryController {
     @Autowired
     FactoryDao factoryDao;
 
-
-    @GetMapping("/findByPage")
+    @PostMapping("/findAllFactory")
     @ApiOperation(value = "模糊分页查询", notes = "根据姓名模糊查询并分页")
-    public RestResult findByPage(Integer pageNum, Integer pageSize, Factory factory) {
+    public RestResult findAllFactory(Integer pageNum, Integer pageSize,  Factory factory) {
         if (pageNum == 0 || pageNum == null) {
             pageNum = 1;
         }
+        Map<String,Object> map = new HashMap<>();
         Page<Factory> likeNameByPage = factoryService.findLikeNameByPage(pageNum, pageSize, factory);
-        return new ResultGenerator().getSuccessResult(likeNameByPage);
+        List<Factory> content = likeNameByPage.getContent();
+        long total = likeNameByPage.getTotalElements();
+        if (likeNameByPage == null){
+               LOG.error("用户不存在");
+        }
+        map.put("total",total);
+        map.put("content", content);
+        return new ResultGenerator().getSuccessResult(map);
     }
 
-    @GetMapping("/findAllFactory")
+  /*  @GetMapping("/findAllFactory")
     @ApiOperation(value = "遍历所有工厂", notes = "遍历所有工厂")
     public RestResult findAllFactory(Integer pageNum, Integer pageSize) {
         if (pageNum == 0 || pageNum == null) {
             pageNum = 1;
         }
         Map<String, Object> map = new HashMap<>();
-        Page<Factory> all = factoryService.findAll(pageNum, pageSize);
-        List<Factory> content = all.getContent();
+        if (pageSize == null || pageSize == 0) {
+            List<Factory> content = factoryDao.findAll();
+            long total = factoryDao.count();
+            map.put("total", total);
+            map.put("content", content);
+        } else {
+            Page<Factory> all = factoryService.findAll(pageNum, pageSize);
+            List<Factory> content = all.getContent();
+            long total = factoryDao.count();
+            map.put("total", total);
+            map.put("content", content);
+        }
+        if (map == null) {
+            LOG.error("数据为空");
+        }else {
+        }
+        return new ResultGenerator().getSuccessResult(map);
+    }
+*/
+  /*  @GetMapping("/findAllFa")
+    @ApiOperation(value = "遍历所有工厂（不分页）", notes = "遍历所有工厂（不分页）")
+    public RestResult findAllFa() {
+        Map<String, Object> map = new HashMap<>();
+        List<Factory> content = factoryDao.findAll();
         long total = factoryDao.count();
         map.put("total", total);
         map.put("content", content);
@@ -64,7 +93,7 @@ public class FactoryController {
             LOG.error("数据为空");
         }
         return new ResultGenerator().getSuccessResult(map);
-    }
+    }*/
 
     @GetMapping("/factoryDetail")
     @ApiOperation(value = "单个工厂", notes = "单个工厂")
@@ -85,6 +114,7 @@ public class FactoryController {
         String[] idsStr = ids.split(",");
         for (int i = 0; i < idsStr.length; i++) {
             factoryDao.deleteById(Integer.parseInt(idsStr[i]));
+            LOG.info("删除工厂成功");
         }
         return new ResultGenerator().getSuccessResult();
     }
@@ -97,6 +127,7 @@ public class FactoryController {
         } else {
             factory.setUpdateDateTime(new Date());
             factoryService.update(factory);
+            LOG.info("修改工厂成功");
         }
         return new ResultGenerator().getSuccessResult();
     }
@@ -174,6 +205,7 @@ public class FactoryController {
         File dest = new File(filePath + fileName);
         if (!dest.getParentFile().exists()) {
             dest.getParentFile().mkdirs();//返回json
+            LOG.info("上传成功");
         }
         try {
             file.transferTo(dest);
@@ -181,6 +213,6 @@ public class FactoryController {
         } catch (IOException e) {
             LOG.error(e.getMessage(), e.getCause());
         }
-        return new ResultGenerator().getSuccessResult("/images/"+fileName);
+        return new ResultGenerator().getSuccessResult("/images/" + fileName);
     }
 }

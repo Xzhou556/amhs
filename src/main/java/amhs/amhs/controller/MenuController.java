@@ -37,6 +37,7 @@ public class MenuController {
             LOG.error("menu为空");
         } else {
             menuDao.save(menu);
+            LOG.info("菜单保存成功");
         }
         return new ResultGenerator().getSuccessResult();
     }
@@ -58,6 +59,7 @@ public class MenuController {
             LOG.error("数据为空！！！");
         } else {
             menuService.update(menu);
+            LOG.info("修改菜单成功");
         }
         return new ResultGenerator().getSuccessResult();
     }
@@ -104,6 +106,7 @@ public class MenuController {
                     List<Menu> list = menuService.list(map, 0, 100);
                     for (Menu menu : list) {
                         menuDao.deleteByMenuId(menu.getMenuId());
+                        LOG.info("菜单删除成功");
                     }
                     //看看下面有没有菜单   一同删除
                     menuDao.deleteByMenuId(Integer.parseInt(arr[i]));

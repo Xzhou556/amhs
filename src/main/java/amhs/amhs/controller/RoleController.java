@@ -48,6 +48,7 @@ public class RoleController {
         } else {
             role.setCreateDateTime(new Date());
             roleDao.save(role);
+            LOG.info("角色添加成功");
         }
         return new ResultGenerator().getSuccessResult();
     }
@@ -57,6 +58,7 @@ public class RoleController {
     public RestResult updateRole(@RequestBody Role role) {
         // role.setUpdateDateTime(new Date());
         roleService.update(role);
+        LOG.info("角色修改成功");
         return new ResultGenerator().getSuccessResult();
     }
 
@@ -67,6 +69,7 @@ public class RoleController {
         for (int i = 0; i < idsStr.length; i++) {
             try {
                 roleDao.deleteById(Integer.parseInt(idsStr[i]));
+                LOG.info("角色删除成功");
             } catch (Exception e) {
                 return new ResultGenerator().getFailResult("有角色在使用");
             }

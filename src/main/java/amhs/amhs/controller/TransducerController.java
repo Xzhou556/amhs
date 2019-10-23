@@ -72,17 +72,19 @@ public class TransducerController {
         String[] idsStr = ids.split(",");
         for (int i = 0; i < idsStr.length; i++) {
             transducerDao.deleteById(Integer.parseInt(idsStr[i]));
+            LOG.info("传感器删除成功");
         }
         return new ResultGenerator().getSuccessResult();
     }
 
-    @PutMapping("/updateTransducer")
+    @PostMapping("/updateTransducer")
     @ApiOperation(value = "修改传感器", notes = "修改传感器")
     public RestResult updateFactory(@RequestBody Transducer transducer) {
         if (transducer == null) {
             LOG.error("数据不能为空");
         } else {
             transducerService.update(transducer);
+            LOG.info("传感器修改成功");
         }
         return new ResultGenerator().getSuccessResult();
     }
@@ -95,6 +97,7 @@ public class TransducerController {
         } else {
             transducer.setCreateDateTime(new Date());
             transducerDao.save(transducer);
+            LOG.info("传感器添加成功");
         }
         return new ResultGenerator().getSuccessResult();
     }

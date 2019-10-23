@@ -16,5 +16,7 @@ public interface UserInfoDao extends JpaRepository<UserInfo,Integer> , JpaSpecif
     @Query(value = "select * from t_userinfo where user_id=?1",nativeQuery = true)
     UserInfo findId(Integer id);
 
+    @Query(value = "SELECT * FROM t_userinfo WHERE account =? ",nativeQuery = true)
+    UserInfo findAccount(String account);
 
 }

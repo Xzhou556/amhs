@@ -34,7 +34,7 @@ public class TransducerTypeController {
             LOG.error("数据不能为空");
         } else {
             transducerTypeDao.save(transducerType);
-
+            LOG.info("传感器类型添加成功");
         }
         return new ResultGenerator().getSuccessResult();
     }
@@ -46,6 +46,7 @@ public class TransducerTypeController {
         for (int i = 0; i < idsStr.length; i++) {
             try {
                 transducerTypeDao.deleteId(Integer.parseInt(idsStr[i]));
+                LOG.info("传感器类型删除成功");
             } catch (Exception e) {
                 return new ResultGenerator().getFailResult("有角色在使用");
             }
@@ -53,13 +54,14 @@ public class TransducerTypeController {
         return new ResultGenerator().getSuccessResult();
     }
 
-    @PutMapping("/updateTransducerType")
+    @PostMapping("/updateTransducerType")
     @ApiOperation(value = "修改传感器类型", notes = "修改传感器类型")
     public RestResult updateTransducerType(@RequestBody TransducerType transducerType) {
         if (transducerType.getTtId() == null || "".equals(transducerType.getTtId())) {
             LOG.error("数据不能为空");
         } else {
             transducerTypeService.update(transducerType);
+            LOG.info("传感器类型修改成功");
         }
         return new ResultGenerator().getSuccessResult();
     }
@@ -84,5 +86,16 @@ public class TransducerTypeController {
     public RestResult transducerTypeDetail(Integer id) {
         TransducerType transducerType = transducerTypeDao.findId(id);
         return new ResultGenerator().getSuccessResult(transducerType);
+    }
+
+    @GetMapping("/transducerTypeAll")
+    @ApiOperation(value = "获取所有传感器类型（不分页）", notes = "获取所有传感器类型（不分页）")
+    public RestResult transducerTypeAll() {
+        Map<String, Object> map = new HashMap<>();
+        List<TransducerType> content = transducerTypeDao.findAll();
+        long total = transducerTypeDao.count();
+        map.put("total", total);
+        map.put("content", content);
+        return new ResultGenerator().getSuccessResult(map);
     }
 }

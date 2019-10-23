@@ -55,23 +55,11 @@ public class UserInfoServiceImpl implements UserInfoService {
         if (curr.getAccount() == null){
             curr.setAccount(origin.getAccount());
         }
-        if (curr.getPassword() == null){
-            curr.setPassword(origin.getPassword());
-        }
         if (curr.getTrueName() == null){
             curr.setTrueName(origin.getTrueName());
         }
         if (curr.getMobilePhone() == null){
             curr.setMobilePhone(origin.getMobilePhone());
-        }
-        if (curr.getSalt() == null){
-            curr.setSalt(origin.getSalt());
-        }
-        if (curr.getOrderNo() == null){
-            curr.setOrderNo(origin.getOrderNo());
-        }
-        if (curr.getCreateDateTime() == null){
-            curr.setCreateDateTime(origin.getCreateDateTime());
         }
         if (curr.getUpdateDateTime() == null){
             curr.setUpdateDateTime(origin.getUpdateDateTime());
@@ -79,6 +67,24 @@ public class UserInfoServiceImpl implements UserInfoService {
         if (curr.getRole() == null){
             curr.setRole(origin.getRole());
         }
+        if (curr.getCreateDateTime() == null){
+            curr.setCreateDateTime(origin.getCreateDateTime());
+        }
+        if (curr.getPassword() == null){
+            curr.setPassword(origin.getPassword());
+        }
+        if (curr.getSalt() == null){
+            curr.setSalt(origin.getSalt());
+        }
+        if (curr.getState() == null){
+            curr.setState(origin.getState());
+        }
+        if (curr.getRemark() == null){
+            curr.setRemark(origin.getRemark());
+        }
+
+
+
         return curr;
     }
 }

@@ -36,12 +36,6 @@ public class StandardController {
     @Autowired
     TransducerTypeDao transducerTypeDao;
 
-    @PostMapping("/addStandard")
-    @ApiOperation(value = "添加标准", notes = "添加标准")
-    public RestResult addStandard(@RequestBody String data) {
-
-        return new ResultGenerator().getSuccessResult();
-    }
 
     @PostMapping("/updateStandard")
     @ApiOperation(value = "修改标准", notes = "修改标准")
@@ -68,9 +62,11 @@ public class StandardController {
             standard2.setName(name);
             if (standardId == null) {
                 standardDao.save(standard2);
+                LOG.info("传感器标准添加成功");
             } else {
                 standard2.setStandardId(standardId);
                 standardService.update(standard2);
+                LOG.info("传感器标准修改成功");
             }
 
         }
@@ -85,6 +81,7 @@ public class StandardController {
         String[] idsStr = ids.split(",");
         for (int i = 0; i < idsStr.length; i++) {
                 standardDao.deleteByStandardId(Integer.parseInt(idsStr[i]));
+            LOG.info("传感器标准删除成功");
             }
         return new ResultGenerator().getSuccessResult();
     }

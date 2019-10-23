@@ -18,9 +18,7 @@ public class TransducerTypeServiceImpl implements TransducerTypeService {
     TransducerTypeDao transducerTypeDao;
 
     public TransducerType replace(TransducerType curr,TransducerType origin){
-        if (curr.getTtId() == null){
-            curr.setTtId(origin.getTtId());
-        }
+
         if (curr.getName() == null){
             origin.setName(curr.getName());
         }
