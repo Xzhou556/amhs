@@ -1,10 +1,11 @@
 package amhs.amhs.entity;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 @Entity(name = "UserFactory")
 @Table(name = "user_factory")
-public class UserFactory {
+public class UserFactory implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

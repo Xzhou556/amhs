@@ -57,14 +57,14 @@ public class UserController {
     @ApiOperation(value = "添加用户", notes = "添加用户")
     public RestResult addUser(@RequestBody String  data) {
         JSONObject jsonObject = JSON.parseObject(data);
-        String account = jsonObject.getString("account");
+        String account = jsonObject.getString("account").trim();
         Integer factoryId = jsonObject.getInteger("factoryId");
-        String mobilePhone = jsonObject.getString("mobilePhone");
+        String mobilePhone = jsonObject.getString("mobilePhone").trim();
         String remark = jsonObject.getString("remark");
         Integer roleId = jsonObject.getInteger("roleId");
         Integer state = jsonObject.getInteger("state");
-        String trueName = jsonObject.getString("trueName");
-        String password = jsonObject.getString("password");
+        String trueName = jsonObject.getString("trueName").trim();
+        String password = jsonObject.getString("password").trim();
         UserInfo userInfo = new UserInfo();
         userInfo.setCreateDateTime(new Date());
         String salt = CommonUtil.getRandomString(5);
@@ -138,12 +138,12 @@ public class UserController {
         JSONObject jsonObject = JSON.parseObject(data);
         Integer userId = jsonObject.getInteger("userId");
         Integer factoryId = jsonObject.getInteger("factoryId");
-        String mobilePhone = jsonObject.getString("mobilePhone");
+        String mobilePhone = jsonObject.getString("mobilePhone").trim();
         String account = jsonObject.getString("account");
         String remark = jsonObject.getString("remark");
         Integer roleId = jsonObject.getInteger("roleId");
         Integer state = jsonObject.getInteger("state");
-        String trueName = jsonObject.getString("trueName");
+        String trueName = jsonObject.getString("trueName").trim();
         UserInfo userInfo = new UserInfo();
         userInfo.setUserId(userId);
         userInfo.setAccount(account);

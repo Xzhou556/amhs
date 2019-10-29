@@ -30,7 +30,12 @@ public class StandardServiceImpl implements StandardService {
         if (curr.getUnit() == null){
             curr.setUnit(origin.getUnit());
         }
-
+        if (curr.getContent() == null){
+            curr.setContent(origin.getContent());
+        }
+        if (curr.getType() == null){
+            curr.setType(origin.getType());
+        }
         return curr;
     }
 

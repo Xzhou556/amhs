@@ -1,10 +1,11 @@
 package amhs.amhs.entity;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 @Entity(name = "TransducerType")
 @Table(name = "t_transducertype")
-public class TransducerType {
+public class TransducerType implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

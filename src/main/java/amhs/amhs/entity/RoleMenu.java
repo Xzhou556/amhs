@@ -1,10 +1,11 @@
 package amhs.amhs.entity;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 @Entity
 @Table(name="t_role_menu")
-public class RoleMenu {
+public class RoleMenu implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -73,11 +73,16 @@ public class TransducerTypeController {
             pageNum = 1;
         }
         Map<String, Object> map = new HashMap<>();
-        Page<TransducerType> all = transducerTypeService.findAll(pageNum, pageSize);
-        List<TransducerType> content = all.getContent();
-        long total = transducerTypeDao.count();
-        map.put("total", total);
-        map.put("content", content);
+        if (pageSize == 0 || pageSize == null) {
+            List<TransducerType> content = transducerTypeDao.findAll();
+            map.put("content", content);
+        } else {
+            Page<TransducerType> all = transducerTypeService.findAll(pageNum, pageSize);
+            List<TransducerType> content = all.getContent();
+            long total = transducerTypeDao.count();
+            map.put("total", total);
+            map.put("content", content);
+        }
         return new ResultGenerator().getSuccessResult(map);
     }
 

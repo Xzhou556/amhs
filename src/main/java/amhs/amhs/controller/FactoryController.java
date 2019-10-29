@@ -37,7 +37,7 @@ public class FactoryController {
     @Autowired
     FactoryDao factoryDao;
 
-    @PostMapping("/findAllFactory")
+    @GetMapping("/findAllFactory")
     @ApiOperation(value = "模糊分页查询", notes = "根据姓名模糊查询并分页")
     public RestResult findAllFactory(Integer pageNum, Integer pageSize,  Factory factory) {
         if (pageNum == 0 || pageNum == null) {

@@ -1,11 +1,12 @@
 package amhs.amhs.entity;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.math.BigDecimal;
 
 @Entity(name = "Standard")
 @Table(name = "t_standard")
-public class Standard {
+public class Standard implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -17,6 +18,25 @@ public class Standard {
     @Column(precision = 6, scale = 2)
     private BigDecimal lowerLimit;
     private String unit;
+
+    private Integer type;
+    private String content;
+
+    public Integer getType() {
+        return type;
+    }
+
+    public void setType(Integer type) {
+        this.type = type;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
 
     @ManyToOne
     @JoinColumn(name = "tt_id")

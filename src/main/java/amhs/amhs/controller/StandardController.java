@@ -54,8 +54,12 @@ public class StandardController {
             BigDecimal lowerLimit = standard1.getBigDecimal("lowerlimit");
             BigDecimal upperLimit = standard1.getBigDecimal("upperlimit");
             String unit = standard1.getString("unit");
-            standard2.setTransducerType(transducerTypeDao.findId(ttId));
+            Integer type = standard1.getInteger("type");
+            String content = standard1.getString("content");
 
+            standard2.setTransducerType(transducerTypeDao.findId(ttId));
+            standard2.setType(type);
+            standard2.setContent(content);
             standard2.setUnit(unit);
             standard2.setLowerLimit(lowerLimit);
             standard2.setUpperLimit(upperLimit);

@@ -1,10 +1,11 @@
 package amhs.amhs.entity;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 @Entity(name = "PCD")
 @Table(name = "province_city_district")
-public class PCD {
+public class PCD implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;

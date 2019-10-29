@@ -1,10 +1,11 @@
 package amhs.amhs.entity;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 @Entity(name = "WxUserFactory")
 @Table(name = "wxuser_factory")
-public class WxUserFactory {
+public class WxUserFactory implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
