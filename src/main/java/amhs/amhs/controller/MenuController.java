@@ -73,18 +73,28 @@ public class MenuController {
         if (pageNum == null || pageSize == null || pId == null) {
             return new ResultGenerator().getFailResult("数据不能为空");
         }
-
+        if (pageNum == 0 || pageNum == null){
+            pageNum =1 ;
+        }
         Map<String, Object> map = new HashMap<>();
         if (StringUtil.isNotEmpty("pId")) {
             map.put("pId", pId);
         }
-        List<Menu> content = menuService.list(map, pageNum - 1, pageSize);
+        if(pageSize == null || pageSize == 0){
+            List<Menu> content = menuService.list(map);
+            long total = menuDao.count();
+            map.clear();
+            map.put("content", content);
+            map.put("total", total);
+        }else {
+            List<Menu> content = menuService.list(map, pageNum - 1, pageSize);
 
-        long total = menuService.getTotal(map);
-        map.clear();
-        map.put("content", content);
-        map.put("total", total);
-        if (map == null){
+            long total = menuService.getTotal(map);
+            map.clear();
+            map.put("content", content);
+            map.put("total", total);
+        }
+            if (map == null){
             LOG.error("数据为空！！！");
         }
         return new ResultGenerator().getSuccessResult(map);

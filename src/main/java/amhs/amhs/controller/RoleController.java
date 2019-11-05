@@ -11,6 +11,7 @@ import amhs.amhs.entity.vo.ResultGenerator;
 import amhs.amhs.service.MenuService;
 import amhs.amhs.service.RoleService;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 
 import io.swagger.annotations.Api;
@@ -205,9 +206,20 @@ public class RoleController {
 
     @PostMapping("/updateMenu")
     @ApiOperation(value = "修改角色和菜单", notes = "修改角色和菜单")
-    public RestResult updateMenu(@RequestParam(value = "roleId", required = false) Integer roleId,
-                                 @RequestParam(value = "menuId", required = false) String menuId) {
-        roleService.updateMenu(roleId, menuId);
+    public RestResult updateMenu(@RequestBody String data) {
+        JSONObject jsonObject = JSON.parseObject(data);
+        String ids = jsonObject.getString("ids");
+        Integer roleId = jsonObject.getInteger("roleId");
+        roleService.updateMenu(roleId, ids);
         return new ResultGenerator().getSuccessResult();
+    }
+
+
+    @GetMapping("/hasRoleMenu")
+    @ApiOperation(value = "角色和菜单", notes = "角色和菜单")
+    public RestResult hasRoleMenu(@RequestParam(value = "roleId", required = false) Integer roleId
+                                ) {
+        List<RoleMenu> roleMenus = roleMenuDao.findByRoleId(roleId);
+        return new ResultGenerator().getSuccessResult(roleMenus);
     }
 }

@@ -53,7 +53,6 @@ public class Role implements Serializable {
     public void setOrderNo(Integer orderNo) {
         this.orderNo = orderNo;
     }
-    @JsonSerialize(using = CustomDateTimeSerializer.class)
     public Date getCreateDateTime() {
         return createDateTime;
     }
@@ -61,7 +60,6 @@ public class Role implements Serializable {
     public void setCreateDateTime(Date createDateTime) {
         this.createDateTime = createDateTime;
     }
-    @JsonSerialize(using = CustomDateTimeSerializer.class)
     public Date getUpdateDateTime() {
         return updateDateTime;
     }

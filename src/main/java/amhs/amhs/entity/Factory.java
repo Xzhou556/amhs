@@ -43,12 +43,7 @@ public class Factory implements Serializable {
     private String tel;//办公室座机电话
 
 
-    private String factoryType; //公司的类型 不用枚举了自己填下公司类型
-
-    @OneToMany(targetEntity = Transducer.class)
-    @JoinColumn(name = "factory_Id", referencedColumnName = "factoryId")
-    private List<Transducer> transducers;
-
+    private Integer factoryType; //公司的类型 不用枚举了自己填下公司类型
 
     //创建时间
     @Temporal(TemporalType.TIMESTAMP)
@@ -150,24 +145,13 @@ public class Factory implements Serializable {
         this.picture = picture;
     }
 
-    public String getFactoryType() {
+    public Integer getFactoryType() {
         return factoryType;
     }
 
-    public void setFactoryType(String factoryType) {
+    public void setFactoryType(Integer factoryType) {
         this.factoryType = factoryType;
     }
-
-    public List<Transducer> getTransducers() {
-        return transducers;
-    }
-
-    public void setTransducers(List<Transducer> transducers) {
-        this.transducers = transducers;
-    }
-
-
-
 
     public Date getCreateDateTime() {
         return createDateTime;
@@ -186,24 +170,5 @@ public class Factory implements Serializable {
         this.updateDateTime = updateDateTime;
     }
 
-    @Override
-    public String toString() {
-        return "Factory{" +
-                "factoryId=" + factoryId +
-                ", factoryName='" + factoryName + '\'' +
-                ", address='" + address + '\'' +
-                ", phone='" + phone + '\'' +
-                ", description='" + description + '\'' +
-                ", longitude=" + longitude +
-                ", latitude=" + latitude +
-                ", picture='" + picture + '\'' +
-                ", province='" + province + '\'' +
-                ", leader='" + leader + '\'' +
-                ", tel='" + tel + '\'' +
-                ", factoryType='" + factoryType + '\'' +
-                ", transducers=" + transducers +
-                ", createDateTime=" + createDateTime +
-                ", updateDateTime=" + updateDateTime +
-                '}';
-    }
+
 }

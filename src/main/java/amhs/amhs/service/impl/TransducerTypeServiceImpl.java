@@ -25,6 +25,9 @@ public class TransducerTypeServiceImpl implements TransducerTypeService {
         if (curr.getState() == null){
             curr.setState(origin.getState());
         }
+        if (curr.getType() == null){
+            curr.setType(origin.getType());
+        }
 
         return curr;
     }

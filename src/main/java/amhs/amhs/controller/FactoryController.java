@@ -7,9 +7,6 @@ import amhs.amhs.entity.vo.ResultGenerator;
 import amhs.amhs.service.FactoryService;
 import amhs.amhs.service.TransducerService;
 import amhs.amhs.utils.ReadExcelUtil;
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.log4j.Logger;
@@ -113,8 +110,15 @@ public class FactoryController {
         }
         String[] idsStr = ids.split(",");
         for (int i = 0; i < idsStr.length; i++) {
-            factoryDao.deleteById(Integer.parseInt(idsStr[i]));
-            LOG.info("删除工厂成功");
+           try {
+               factoryDao.deleteById(Integer.parseInt(idsStr[i]));
+               LOG.info("删除工厂成功");
+           }catch (Exception e){
+               LOG.error("删除失败，有其他类型关联");
+               return new ResultGenerator().getSuccessResult("删除失败，有其他类型关联");
+
+           }
+
         }
         return new ResultGenerator().getSuccessResult();
     }
@@ -168,7 +172,7 @@ public class FactoryController {
                     e.printStackTrace();
                     return new ResultGenerator().getFailResult("文件上传失败！");
                 }
-                //返回json
+
             }
         }
         return new ResultGenerator().getSuccessResult();
@@ -187,32 +191,5 @@ public class FactoryController {
         }
     }
 
-    //处理文件上传
-    @ApiOperation(value = "单个文件上传", notes = "单个文件上传")
-    @PostMapping(value = "/upload")
-    public RestResult upload(@RequestParam(value = "file", required = false) MultipartFile file,
-                             HttpServletRequest request) {
-        if (file.isEmpty()) {
-            return new ResultGenerator().getFailResult("文件不能为空");
-        }
-        // String contentType = file.getContentType();
-        String fileName = file.getOriginalFilename();  //获取上传文件原名
 
-        String suffixName = fileName.substring(fileName.lastIndexOf("."));
-        LOG.info(fileName + suffixName);
-        String filePath = "E://txt//";
-        fileName = UUID.randomUUID() + suffixName;
-        File dest = new File(filePath + fileName);
-        if (!dest.getParentFile().exists()) {
-            dest.getParentFile().mkdirs();//返回json
-            LOG.info("上传成功");
-        }
-        try {
-            file.transferTo(dest);
-
-        } catch (IOException e) {
-            LOG.error(e.getMessage(), e.getCause());
-        }
-        return new ResultGenerator().getSuccessResult("/images/" + fileName);
-    }
 }

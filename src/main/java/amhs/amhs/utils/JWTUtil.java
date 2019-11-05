@@ -11,7 +11,7 @@ import java.util.Date;
 
 public class JWTUtil     {
     //过期时间30天
-    private static final long EXPIRE_TIME = 24 * 60 * 30 * 1000;
+    private static final long EXPIRE_TIME =60*20;
 
     /**
      * 校验token是否正确
@@ -24,7 +24,7 @@ public class JWTUtil     {
     public static boolean verify(String token,String username, String password){
         try{
             Algorithm algorithm = Algorithm.HMAC256(password);
-            JWTVerifier verifier = JWT.require(algorithm).withClaim("username",username).build();
+            JWTVerifier verifier = JWT.require(algorithm).withClaim("account",username).build();
             DecodedJWT jwt = verifier.verify(token);
             return true;
 

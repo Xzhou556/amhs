@@ -19,10 +19,16 @@ public class Notice implements Serializable {
 
     @Column(length = 1000)
     private String description;
-    @Column(length = 1000)
+
+   @Lob
+   @Basic(fetch=FetchType.LAZY)
     private String content;
 
     private Integer state;
+
+    private String file;
+
+    private String keyword;
 
     private Integer type;
     @Temporal(TemporalType.TIMESTAMP)
@@ -33,6 +39,22 @@ public class Notice implements Serializable {
     @ManyToOne
     @JoinColumn(name = "factoryId")
     private Factory factory;
+
+    public String getFile() {
+        return file;
+    }
+
+    public void setFile(String file) {
+        this.file = file;
+    }
+
+    public String getKeyword() {
+        return keyword;
+    }
+
+    public void setKeyword(String keyword) {
+        this.keyword = keyword;
+    }
 
     public Integer getNoticeId() {
         return noticeId;

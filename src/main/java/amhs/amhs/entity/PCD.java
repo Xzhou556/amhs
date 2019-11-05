@@ -36,12 +36,5 @@ public class PCD implements Serializable {
         this.name = name;
     }
 
-    @Override
-    public String toString() {
-        return "PCD{" +
-                "id=" + id +
-                ", pid=" + pid +
-                ", name='" + name + '\'' +
-                '}';
-    }
+
 }

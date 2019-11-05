@@ -38,43 +38,44 @@ public class JWTFilter extends BasicHttpAuthenticationFilter {
     protected boolean executeLogin(ServletRequest request, ServletResponse response) throws Exception {
         HttpServletResponse httpServletResponse = (HttpServletResponse) response;
         try {
-            HttpServletRequest req= (HttpServletRequest) request;
+            HttpServletRequest req = (HttpServletRequest) request;
             String header = req.getHeader(LOGIN_SIGN);
             JWTToken token = new JWTToken(header);
-            getSubject(request,response).login(token);
+            getSubject(request, response).login(token);
             LOG.info("JWT验证用户信息成功");
-            return  true;
-        }catch (Exception e){
+            return true;
+
+        } catch (Exception e) {
             /**
              * 原生的shiro验证失败会进入全局异常 但是 和JWT结合以后却不进入了  之前一直想不通
              *   原因是 JWT直接在过滤器里验证  验证成功与否 都是直接返回到过滤器中 成功在进入controller
              *    失败直接返回进入springboot自定义异常处理页面
              */
-            JSONObject json= new JSONObject();
-            json.put("result","401");
-            json.put("resultCode","token无效，请重新获取。");
-            json.put("resultData","null");
-            PrintWriter out = null;
+            JSONObject json = new JSONObject();
+            json.put("result", "401");
+            json.put("resultCode", "token无效，请重新获取。");
+            json.put("resultData", "null");
+        //    PrintWriter out = null;
             httpServletResponse.setCharacterEncoding("UTF-8");
             httpServletResponse.setContentType("application/json; charset=utf-8");
-            LOG.info("返回是");
-            LOG.info(json.toString());
-            out = httpServletResponse.getWriter();
-            out.append(json.toString());
+          //  LOG.info("返回是");
+          //  LOG.info(json.toString());
+          //  out = httpServletResponse.getWriter();
+            //out.append(json.toString());
 
         }
         return false;
-
     }
+
 
     @Override
     protected boolean isAccessAllowed(ServletRequest request, ServletResponse response, Object mappedValue){
         if (isLoginAttempt(request, response)) {
-            try {
+           try {
                 executeLogin(request,response);
-            }catch (Exception e){
-                LOG.error(e.getMessage(),e.getCause()); //throw new AuthorizationException("权限不足",e);
-            }
+           }catch (Exception e){
+               LOG.error(e.getMessage(),e.getCause()); //throw new AuthorizationException("权限不足",e);
+           }
 
         }
         return  true;

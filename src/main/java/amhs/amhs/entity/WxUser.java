@@ -30,7 +30,7 @@ public class WxUser implements Serializable {
     //修改时间
     @Temporal(TemporalType.TIMESTAMP)
     private Date updateDateTime;
-    @JsonSerialize(using = CustomDateTimeSerializer.class)
+
     public Date getCreateDateTime() {
         return createDateTime;
     }
@@ -38,7 +38,7 @@ public class WxUser implements Serializable {
     public void setCreateDateTime(Date createDateTime) {
         this.createDateTime = createDateTime;
     }
-    @JsonSerialize(using = CustomDateTimeSerializer.class)
+
     public Date getUpdateDateTime() {
         return updateDateTime;
     }

@@ -12,10 +12,15 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
+import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 @CrossOrigin
 @RequestMapping("/notice")
@@ -93,5 +98,7 @@ public class NoticeController {
         map.put("notice", notice);
         return new ResultGenerator().getSuccessResult(map);
     }
+
+
 
 }

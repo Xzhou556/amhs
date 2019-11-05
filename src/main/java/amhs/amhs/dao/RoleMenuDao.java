@@ -24,7 +24,8 @@ public interface RoleMenuDao extends JpaRepository<RoleMenu,Integer>, JpaSpecifi
     @Query(value="delete  from t_role_menu where role_id = ?1",nativeQuery = true)
     public Integer deleteByRoleId(Integer roleId);
 
-
+    @Query(value="select * from t_role_menu where role_id = ?1",nativeQuery = true)
+   List<RoleMenu> findByRoleId(Integer roleId);
     /**
      * 根据 roleId  menuId  查询 是否有内容
      * @return

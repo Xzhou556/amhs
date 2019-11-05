@@ -80,9 +80,6 @@ public class FactoryServiceImpl implements FactoryService {
         if(curr.getFactoryType()==null){
             curr.setFactoryType(origin.getFactoryType());
         }
-        if(curr.getTransducers()==null){
-            curr.setTransducers(origin.getTransducers());
-        }
         if(curr.getCreateDateTime()==null){
             curr.setCreateDateTime(origin.getCreateDateTime());
         }

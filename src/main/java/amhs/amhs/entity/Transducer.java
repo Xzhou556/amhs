@@ -1,5 +1,6 @@
 package amhs.amhs.entity;
 
+import com.alibaba.fastjson.annotation.JSONField;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import io.swagger.annotations.ApiModel;
@@ -54,7 +55,6 @@ public class Transducer implements Serializable {
 
     private Integer dataType;//数据类型
 
-    @JsonSerialize(using = CustomDateTimeSerializer.class)
     public Date getCreateDateTime() {
         return createDateTime;
     }
@@ -138,7 +138,6 @@ public class Transducer implements Serializable {
         this.crc = crc;
     }
 
-    @JsonSerialize(using = CustomDateTimeSerializer.class)
     public Date getCollectTime() {
         return collectTime;
     }
@@ -170,8 +169,6 @@ public class Transducer implements Serializable {
     public void setLatitude(BigDecimal latitude) {
         this.latitude = latitude;
     }
-
-    @JsonSerialize(using = CustomDateTimeSerializer.class)
     public Date getExpirationDate() {
         return expirationDate;
     }
@@ -228,27 +225,5 @@ public class Transducer implements Serializable {
         this.factory = factory;
     }
 
-    @Override
-    public String toString() {
-        return "Transducer{" +
-                "deviceId=" + deviceId +
-                ", deviceNumber=" + deviceNumber +
-                ", threshold=" + threshold +
-                ", liquidLevel=" + liquidLevel +
-                ", deviceStatus=" + deviceStatus +
-                ", crc='" + crc + '\'' +
-                ", collectTime=" + collectTime +
-                ", temp=" + temp +
-                ", longitude=" + longitude +
-                ", latitude=" + latitude +
-                ", expirationDate=" + expirationDate +
-                ", batteryPercentage=" + batteryPercentage +
-                ", rxLev=" + rxLev +
-                ", noisePower=" + noisePower +
-                ", dataWarm=" + dataWarm +
-                ", dataType=" + dataType +
-                ", createDateTime=" + createDateTime +
-                ", factory=" + factory +
-                '}';
-    }
+
 }

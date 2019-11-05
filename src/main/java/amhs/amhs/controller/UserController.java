@@ -5,7 +5,6 @@ import amhs.amhs.dao.RoleDao;
 import amhs.amhs.dao.UserFactoryDao;
 import amhs.amhs.dao.UserInfoDao;
 import amhs.amhs.entity.Factory;
-import amhs.amhs.entity.Role;
 import amhs.amhs.entity.UserFactory;
 import amhs.amhs.entity.UserInfo;
 import amhs.amhs.entity.vo.RestResult;
@@ -15,6 +14,7 @@ import amhs.amhs.utils.*;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.sun.org.apache.bcel.internal.generic.IF_ACMPEQ;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.log4j.Logger;
@@ -24,20 +24,26 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.UnauthorizedException;
+import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import springfox.documentation.service.ApiListing;
 
-import javax.print.DocFlavor;
+import javax.imageio.ImageIO;
+import javax.servlet.ServletException;
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.*;
 
 @RestController
-@CrossOrigin
+@CrossOrigin("*")
 @RequestMapping("/user")
 @Api(value = "用户api", tags = "用户api")
 public class UserController {
@@ -55,7 +61,7 @@ public class UserController {
 
     @PostMapping("/addUser")
     @ApiOperation(value = "添加用户", notes = "添加用户")
-    public RestResult addUser(@RequestBody String  data) {
+    public RestResult addUser(@RequestBody String data) {
         JSONObject jsonObject = JSON.parseObject(data);
         String account = jsonObject.getString("account").trim();
         Integer factoryId = jsonObject.getInteger("factoryId");
@@ -93,48 +99,53 @@ public class UserController {
             userInfoDao.save(userInfo);
 
            */
-          LOG.info("用户添加成功");
+        LOG.info("用户添加成功");
         return new ResultGenerator().getSuccessResult();
     }
 
     @ApiOperation(value = "登录")
     @PostMapping("/login")
-    public RestResult login(@RequestParam(value = "account", required = false) String account,
-                            @RequestParam(value = "password", required = false) String password) {
+    public RestResult login(@RequestBody String data) {
+       JSONObject jsonObject = JSON.parseObject(data);
+        String account = jsonObject.getString("account");
+        String password = jsonObject.getString("password");
         UserInfo userInfo = userInfoDao.findByAccount(account);
         // if ()
-
+        Map<String, Object> map = new HashMap<>();
         String cc = ShiroKit.md5(account, password);
-
-        System.out.println(userInfo.getPassword());
+        if (userInfo == null){
+            return new ResultGenerator().getFailResult("账号或密码错误");
+        }
+        //   System.out.println(userInfo.getPassword());
         if (userInfo.getPassword().equals(cc)) {
             String token = JWTUtil.sign(account, password);
-            return new ResultGenerator().getSuccessResult(token);
+            map.put("token", token);
+            map.put("userInfo", userInfo);
         } else if (!userInfo.getAccount().equals(account)) {
-            return new ResultGenerator().getFailResult("账户密码不对");
+            return new ResultGenerator().getFailResult("账号或密码错误");
         } else {
-            LOG.error("账号密码错误");
-            throw new UnauthorizedException();
+
+            return new ResultGenerator().getFailResult("账号或密码错误");
         }
 
-
+        return new ResultGenerator().getSuccessResult(map);
     }
 
     @GetMapping("/userDetail")
     @ApiOperation(value = "查询单个用户", notes = "查询单个用户")
     public RestResult userDetail(@RequestParam(value = "userId", required = false) Integer userId) {
-        Map<String,Object> map=new HashMap<>();
+        Map<String, Object> map = new HashMap<>();
         UserInfo userInfo = userInfoDao.findId(userId);
         UserFactory userFactory = userFactoryDao.findUserId(userId);
         Factory factory = factoryDao.findId(userFactory.getFactory().getFactoryId());
-        map.put("userInfo",userInfo);
-        map.put("factory",factory);
+        map.put("userInfo", userInfo);
+        map.put("factory", factory);
         return new ResultGenerator().getSuccessResult(map);
     }
 
     @PostMapping("/updateUser")
     @ApiOperation(value = "修改用户", notes = "修改用户")
-    public RestResult updateUser(@RequestBody String  data) {
+    public RestResult updateUser(@RequestBody String data) {
         JSONObject jsonObject = JSON.parseObject(data);
         Integer userId = jsonObject.getInteger("userId");
         Integer factoryId = jsonObject.getInteger("factoryId");
@@ -212,12 +223,12 @@ public class UserController {
     @PostMapping("/setPwd")
     @ApiOperation(value = "修改密码", notes = "修改密码")
     public RestResult setPwd(@RequestBody String data) {
-        System.out.println(data+"++++++++++++++++++++++++++");
+        System.out.println(data + "++++++++++++++++++++++++++");
         JSONObject jsonObject = JSON.parseObject(data);
         Integer userId = jsonObject.getInteger("userId");
         String password = jsonObject.getString("password");
         UserInfo userInfo = userInfoDao.findId(userId);
-        userInfo.setPassword(ShiroKit.md5(userInfo.getAccount(),password));
+        userInfo.setPassword(ShiroKit.md5(userInfo.getAccount(), password));
         userInfoService.upDate(userInfo);
         LOG.info("用户密码修改成功");
         return new ResultGenerator().getSuccessResult("修改成功", "success");
@@ -292,6 +303,91 @@ public class UserController {
             map.put("isFound", false);
         } else {
             map.put("isFound", true);
+        }
+        return new ResultGenerator().getSuccessResult(map);
+    }
+
+  /*  @ApiOperation(value = "验证码生成")
+    @GetMapping("/getVerify")
+    public void getVerify(HttpServletRequest request, HttpServletResponse response) {
+        response.setContentType("image/jpeg");//设置相应类型,告诉浏览器输出的内容为图片
+        response.setHeader("Pragma", "No-cache");//设置响应头信息，告诉浏览器不要缓存此内容
+        response.setHeader("Cache-Control", "no-cache");
+        response.setDateHeader("Expire", 0);
+        RandomValidateCodeUtil randomValidateCode = new RandomValidateCodeUtil();
+
+        try {
+
+            randomValidateCode.getRandcode(request, response);//输出验证码图片方法
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @ApiOperation(value = "验证码判断")
+    @GetMapping("/verifyCode")
+    public RestResult verifyCode(HttpSession request, HttpServletResponse response, String code) {
+        System.out.println(code);
+
+         String codeKey = request.getAttribute("RANDOMVALIDATECODEKEY").toString();
+     //   Subject subject = SecurityUtils.getSubject();
+     //   String codeKey = (String) subject.getSession().getAttribute("RANDOMVALIDATECODEKEY");
+        Map<String, Object> map = new HashMap<>();
+
+        if (code != null && !"".equals(code) && codeKey != null && !"".equals(codeKey)) {
+            if (code.equalsIgnoreCase(codeKey)) {
+                map.put("isVerify",true);
+            }else {
+                map.put("isVerify",false);
+
+            }
+        }
+        return new ResultGenerator().getSuccessResult(map);
+    }
+*/
+
+    @ApiOperation(value = "验证码生成")
+    @GetMapping("/getVerify")
+    public void getVerify(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        VerificationCode verificationCode = new VerificationCode();
+        //获取验证码图片
+        BufferedImage image = verificationCode.getImage();
+        //获取验证码内容
+        String text = verificationCode.getText();
+        // randomCode用于保存随机产生的验证码，以便用户登录后进行验证。
+        StringBuffer randomCode = new StringBuffer();
+        randomCode.append(text);
+        // 将验证码保存到Session中。
+        HttpSession session = request.getSession();
+        session.setAttribute("signcode", randomCode.toString());
+        System.out.println("session-signcode==>" + randomCode.toString());
+        // 禁止图像缓存。
+        response.setHeader("Pragma", "no-cache");
+        response.setHeader("Cache-Control", "no-cache");
+        response.setDateHeader("Expires", 0);
+        response.setContentType("image/jpeg");
+        // 将图像输出到Servlet输出流中。
+        ServletOutputStream sos = response.getOutputStream();
+        ImageIO.write(image, "jpeg", sos);
+        sos.flush();
+        sos.close();
+    }
+
+    @ApiOperation(value = "验证码判断")
+    @GetMapping("/verifyCode")
+    public RestResult verifyCode(HttpServletRequest request, String code) {
+        HttpSession session = request.getSession();
+        String signcode = (String) session.getAttribute("signcode");
+        System.out.println("signcode==>" + signcode);
+        System.out.println("signcodeSession==>" + code);
+        Map<String, Object> map = new HashMap<>();
+
+        if (code != null && !"".equals(code) && signcode != null && !"".equals(signcode)) {
+            if (code.equalsIgnoreCase(signcode)) {
+                map.put("isVerify", true);
+            } else {
+                map.put("isVerify", false);
+            }
         }
         return new ResultGenerator().getSuccessResult(map);
     }

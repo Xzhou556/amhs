@@ -91,7 +91,6 @@ public class RoleServiceImpl implements RoleService {
                 roleMenuDao.save(roleMenu);
             }
         }
-
        //修改角色 的更新 时间
         Role role = roleDao.findId(roleId);
          role.setUpdateDateTime(new Date());

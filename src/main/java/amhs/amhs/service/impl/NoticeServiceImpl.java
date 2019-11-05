@@ -38,6 +38,15 @@ public class NoticeServiceImpl implements NoticeService {
         if (curr.getCreatetime() == null) {
             curr.setCreatetime(origin.getCreatetime());
         }
+        if (curr.getKeyword() == null) {
+            curr.setKeyword(origin.getKeyword());
+        }
+        if (curr.getFile() == null) {
+            curr.setFile(origin.getFile());
+        }
+        if (curr.getType() == null) {
+            curr.setType(origin.getType());
+        }
         return curr;
     }
 

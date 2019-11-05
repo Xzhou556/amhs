@@ -15,4 +15,5 @@ public interface MenuService {
     Long getTotal(Map<String,Object> map);
 
     List<Menu> list(Map<String,Object> map, Integer page, Integer pageSize);
+    List<Menu> list(Map<String,Object> map);
 }

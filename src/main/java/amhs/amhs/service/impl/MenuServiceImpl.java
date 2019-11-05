@@ -89,4 +89,20 @@ public class MenuServiceImpl implements MenuService {
         return pages.getContent();
     }
 
+    @Override
+    public List<Menu> list(Map<String, Object> map) {
+        List<Menu> all = menuDao.findAll(new Specification<Menu>() {
+            @Override
+            public Predicate toPredicate(Root<Menu> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
+                Predicate predicate = criteriaBuilder.conjunction();
+                if (map.get("pId") != null) {
+                    predicate.getExpressions().add(criteriaBuilder.equal(root.get("pId"), map.get("pId")));
+                }
+                return predicate;
+            }
+        });
+        return  all;
+    }
+
+
 }

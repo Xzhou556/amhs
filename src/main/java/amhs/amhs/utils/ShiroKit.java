@@ -4,7 +4,9 @@ import org.apache.shiro.crypto.hash.Md5Hash;
 import org.apache.shiro.crypto.hash.SimpleHash;
 import org.apache.shiro.util.ByteSource;
 
-public class ShiroKit {
+import java.io.Serializable;
+
+public class ShiroKit implements Serializable {
     /**
      * 加盐参数
      */
